@@ -14,14 +14,14 @@ int main(int /*_argc*/, char ** /*_argv*/)
     auto res = req.send();
     res.then(
         [&](Pistache::Http::Response hr)
+    {
+        std::cout << "code = " << hr.code() << std::endl;
+        auto body = hr.body();
+        if(!body.empty())
         {
-            std::cout << "code = " << hr.code() << std::endl;
-            auto body = hr.body();
-            if (!body.empty())
-            {
-                std::cout << "body = " << body << std::endl;
-            }
-        }, Pistache::Async::IgnoreException);
+            std::cout << "body = " << body << std::endl;
+        }
+    }, Pistache::Async::IgnoreException);
 
     Pistache::Async::Barrier<Pistache::Http::Response> barrier(res);
     barrier.wait_for(std::chrono::seconds(10));
